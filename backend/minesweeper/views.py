@@ -15,6 +15,6 @@ class GameDetail(generics.RetrieveAPIView):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
 
-class TileUpdate(generics.UpdateAPIView):
+class TileUpdate(generics.RetrieveUpdateAPIView):
     queryset = Tile.objects.all()
     serializer_class = TileSerializer
