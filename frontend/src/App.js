@@ -17,9 +17,7 @@ class App extends Component {
           </Nav>
         </Navbar>
 
-        <Grid>
-          <Row className="text-center"><GameBoard/></Row>
-        </Grid>
+        <GameBoard />
       </div>
     );
   }

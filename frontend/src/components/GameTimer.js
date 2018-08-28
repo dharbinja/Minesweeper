@@ -34,7 +34,7 @@ class GameTimer extends React.Component {
 
     render() {
         return (
-            <span>{this.state.secondsElapsed}</span>
+            <span className="minesweeper-timer">{this.state.secondsElapsed}</span>
         )
     }
 }

@@ -9,9 +9,9 @@ class TileRow extends React.Component {
         )
 
         return (
-            <Row>
+            <div>
                 {content}
-            </Row>
+            </div>
         )
     }
 }

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Grid, Row, Button } from 'react-bootstrap';
+import { Grid, Row, Button, Col } from 'react-bootstrap';
 import axios from 'axios';
 import TileGrid from './TileGrid';
 import GameTimer from './GameTimer';
+import FlagCounter from './FlagCounter';
 
 const API_ENDPOINT = 'http://localhost:8000/api/v1';
 const GAMES_ENDPOINT = '/game/';
@@ -60,17 +61,14 @@ class GameBoard extends React.Component {
             const columns = gameDifficulty.columns;
             
             return (
-                <div>
-                    <Grid>
-                        <Row>
-                            <GameTimer timeStarted={currentGame.time_started}/>
-                            <Button>New Game</Button>
-                            <Button>Flag Counter</Button>
-                        </Row>
-                    </Grid>
-
-                    <br/>
-                    <TileGrid rows={rows} cols={columns} tiles={this.state.currentGame.tile_set}/>
+                <div className="text-center">
+                    <div className="minesweeper-board-container">
+                        <GameTimer timeStarted={currentGame.time_started}/>
+                        <Button>New Game</Button>
+                        <FlagCounter tiles={this.state.currentGame.tile_set} totalMines={gameDifficulty.num_mines}/>
+                        <div><br/></div>
+                        <TileGrid rows={rows} cols={columns} tiles={this.state.currentGame.tile_set}/>
+                    </div>
                 </div>
             )
         }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from 'react-bootstrap';
+import { Grid, Row } from 'react-bootstrap';
 import TileRow from './TileRow'
 
 class TileGrid extends React.Component {
@@ -15,9 +15,9 @@ class TileGrid extends React.Component {
         )
 
         return (
-            <Grid className="minesweeper-grid">
+            <div className="minesweeper-grid">
                 {content}
-            </Grid>
+            </div>
         )
     }
 }

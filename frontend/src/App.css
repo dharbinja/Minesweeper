@@ -1,3 +1,8 @@
+/* The wrapper holding the minesweeper board */
+.minesweeper-board-container {
+  position: relative;
+  display: inline-block;
+}
 
 /* The minesweeper grid of tiles */
 .minesweeper-grid {
@@ -13,4 +18,17 @@
   border-radius: 0px;
   white-space: nowrap;
   overflow: hidden;
+}
+
+/* The timer at the top left */
+.minesweeper-timer {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.minesweeper-flag-counter {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
