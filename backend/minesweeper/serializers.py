@@ -6,6 +6,7 @@ class DifficultySerializer(serializers.ModelSerializer):
     class Meta:
         model = Difficulty
         fields = (
+            'id',
             'name',
             'rows',
             'columns',

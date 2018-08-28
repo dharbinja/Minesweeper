@@ -19,7 +19,7 @@ class Difficulty(models.Model):
 class Game(models.Model):
     time_started = models.DateTimeField(default=datetime.now)
     time_ended = models.DateTimeField(null=True, blank=True)
-    difficulty = models.OneToOneField(Difficulty, on_delete=models.PROTECT, null=True)
+    difficulty = models.ForeignKey(Difficulty, on_delete=models.PROTECT, null=True)
 
     def __str__(self):
         """String representation of the Game model."""
@@ -86,6 +86,12 @@ class Game(models.Model):
                 )
                 tile.save()
 
+    # We'll have the games sorted by time started so that the first one will always be the
+    # "current game". That way when retrieving games it'll make it easier for us to get the
+    # one started last
+    class Meta:
+        ordering = ['-time_started']
+
 
 
 class Tile(models.Model):
@@ -105,3 +111,6 @@ class Tile(models.Model):
     def __str__(self):
         """String representation of the Tile model."""
         return "Tile"
+
+    class Meta:
+        ordering = ['row', 'column']
