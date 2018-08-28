@@ -1,6 +1,16 @@
 from rest_framework import serializers
 
-from .models import Game, Tile
+from .models import Difficulty, Game, Tile
+
+class DifficultySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Difficulty
+        fields = (
+            'name',
+            'rows',
+            'columns',
+            'num_mines',
+        )
 
 class TileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -8,10 +18,12 @@ class TileSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'status',
-            'position',
+            'row',
+            'column',
         )
         read_only_fields = (
-            'position',
+            'row',
+            'column',
         )
 
 class GameSerializer(serializers.ModelSerializer):
@@ -24,4 +36,5 @@ class GameSerializer(serializers.ModelSerializer):
             'time_started',
             'time_ended',
             'tile_set',
+            'difficulty',
         )

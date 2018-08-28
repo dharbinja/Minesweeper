@@ -1,7 +1,11 @@
 from rest_framework import generics
 
-from .models import Game, Tile
-from .serializers import GameSerializer, TileSerializer
+from .models import Difficulty, Game, Tile
+from .serializers import DifficultySerializer, GameSerializer, TileSerializer
+
+class DifficultyList(generics.ListCreateAPIView):
+    queryset = Difficulty.objects.all()
+    serializer_class = DifficultySerializer
 
 class GameList(generics.ListCreateAPIView):
     queryset = Game.objects.all()

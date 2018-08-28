@@ -5,9 +5,21 @@ from random import sample
 
 from django.db import models
 
+class Difficulty(models.Model):
+    name = models.CharField(max_length=20, null=True)
+    rows = models.IntegerField(default=0)
+    columns = models.IntegerField(default=0)
+    num_mines = models.IntegerField(default=0)
+
+    def __str__(self):
+        """String representation of a game difficulty"""
+        return self.name
+
+
 class Game(models.Model):
     time_started = models.DateTimeField(default=datetime.now)
     time_ended = models.DateTimeField(null=True, blank=True)
+    difficulty = models.OneToOneField(Difficulty, on_delete=models.PROTECT, null=True)
 
     def __str__(self):
         """String representation of the Game model."""
@@ -15,10 +27,10 @@ class Game(models.Model):
 
     def build_game_tiles(self):
         """Builds the minesweeper "map" by creating a set of tiles"""
-        cols = 8
-        rows = 8
+        cols = self.difficulty.rows
+        rows = self.difficulty.columns
         num_tiles = rows * cols
-        num_mines = 10
+        num_mines = self.difficulty.num_mines
 
         # We generate a bunch of mine positions here based on index
         mine_positions = list(sample(range(num_tiles), num_mines))
@@ -65,23 +77,30 @@ class Game(models.Model):
 
         for i in range(rows):
             for j in range(cols):
-                tile = Tile.objects.create(game=self, is_mine=mine_matrix[i][j]==-1, mines_around=mine_matrix[i][j])
+                tile = Tile.objects.create(
+                    game=self, 
+                    is_mine=mine_matrix[i][j]==-1, 
+                    neighbouring_mines=mine_matrix[i][j],
+                    row=i,
+                    column=j,
+                )
                 tile.save()
 
 
 
 class Tile(models.Model):
     TILE_STATUS = (
-        (0, 'Closed'),
-        (1, 'Opened'),
-        (2, 'Flagged'),
+        ('Closed', 'Closed'),
+        ('Opened', 'Opened'),
+        ('Flagged', 'Flagged'),
     )
 
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    status = models.IntegerField(default=0, choices=TILE_STATUS)
-    position = models.IntegerField(default=0)
+    status = models.CharField(max_length=7, choices=TILE_STATUS)
+    row = models.IntegerField(default=0)
+    column = models.IntegerField(default=0)
     is_mine = models.BooleanField()
-    mines_around = models.IntegerField()
+    neighbouring_mines = models.IntegerField()
 
     def __str__(self):
         """String representation of the Tile model."""
