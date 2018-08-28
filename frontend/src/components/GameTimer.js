@@ -1,38 +1,41 @@
 import React from 'react';
 
+const MAX_TIME_ELAPSED = 999;
+
 class GameTimer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            secondsElapsed: 0 
-        }
-    }
 
-    componentDidMount() {
-        this.timerID = setInterval(
-            () => this.tick(),
-            1000
-        );
+  constructor(props) {
+    super(props);
+    this.state = {
+      secondsElapsed: 0
     }
+  }
 
-    componentWillUnmount() {
-        clearInterval(this.timerID);
-    }
+  componentDidMount() {
+    this.timerID = setInterval(
+      () => this.tick(),
+      1000
+    );
+  }
 
-    tick() {
-        var difference = Date.now() - new Date(this.props.timeStarted);
-        var secondsDifference = Math.round(difference / 1000);
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
 
-        this.setState({
-            secondsElapsed: secondsDifference
-        });
-    }
+  tick() {
+    var difference = Date.now() - new Date(this.props.timeStarted);
+    var secondsDifference = Math.round(difference / 1000);
 
-    render() {
-        return (
-            <span className="minesweeper-timer">{this.state.secondsElapsed}</span>
-        )
-    }
+    this.setState({
+      secondsElapsed: Math.min(secondsDifference, MAX_TIME_ELAPSED)
+    });
+  }
+
+  render() {
+    return (
+      <span className="minesweeper-timer">{this.state.secondsElapsed}</span>
+    )
+  }
 }
 
 export default GameTimer;
