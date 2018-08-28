@@ -9,13 +9,6 @@ class GameTimer extends React.Component {
     }
 
     componentDidMount() {
-        var difference = Date.now() - new Date(this.props.timeStarted);
-        var secondsDifference = Math.round(difference / 1000);
-
-        this.setState({
-            secondsElapsed: secondsDifference
-        })
-
         this.timerID = setInterval(
             () => this.tick(),
             1000
@@ -27,9 +20,12 @@ class GameTimer extends React.Component {
     }
 
     tick() {
+        var difference = Date.now() - new Date(this.props.timeStarted);
+        var secondsDifference = Math.round(difference / 1000);
+
         this.setState({
-            secondsElapsed: Math.min(this.state.secondsElapsed + 1, 999)
-        })
+            secondsElapsed: secondsDifference
+        });
     }
 
     render() {

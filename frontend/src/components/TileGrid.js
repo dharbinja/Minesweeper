@@ -1,5 +1,4 @@
 import React from 'react';
-import { Grid, Row } from 'react-bootstrap';
 import TileRow from './TileRow'
 
 class TileGrid extends React.Component {

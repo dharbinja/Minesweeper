@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Navbar, Nav, Grid, Row } from 'react-bootstrap'
+import { Navbar, Nav } from 'react-bootstrap'
 import GameBoard from './components/GameBoard'
 
 class App extends Component {
