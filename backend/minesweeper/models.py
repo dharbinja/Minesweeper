@@ -11,14 +11,19 @@ class Game(models.Model):
         """String representation of the Game model."""
         return "Game" 
 
-class TileStatus(Enum):
-    CLOSED = 0,
-    OPENED = 1,
-    FLAGGED = 2
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs) # Save the actual game first
+
 
 class Tile(models.Model):
+    TILE_STATUS = (
+        (0, 'Closed'),
+        (1, 'Opened'),
+        (2, 'Flagged'),
+    )
+
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    status = models.IntegerField(default=TileStatus.CLOSED)
+    status = models.IntegerField(default=0, choices=TILE_STATUS)
     position = models.IntegerField(default=0)
     is_mine = models.BooleanField()
     mines_around = models.IntegerField()
