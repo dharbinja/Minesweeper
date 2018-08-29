@@ -62,8 +62,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Add our local host origin as well as our EC instance hosing the dev site.
 CORS_ORIGIN_WHITELIST = (
-    'localhost:3000/'
+    'localhost:3000/',
+    'http://ec2-34-221-179-99.us-west-2.compute.amazonaws.com/',
 )
 
 ROOT_URLCONF = 'minesweeper_api.urls'
