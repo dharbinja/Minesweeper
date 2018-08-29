@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import axios from 'axios';
-import Spinner from 'react-spinkit';
 import Constants from '../helpers/Constants';
 import TileGrid from './TileGrid';
 import GameTimer from './GameTimer';
@@ -17,7 +16,8 @@ class GameBoard extends React.Component {
       isStartingNewGame: false,
       dateStarted: [],
       dateEnded: [],
-      currentGame: null
+      currentGame: null,
+      tiles: []
     }
   }
 
@@ -25,10 +25,13 @@ class GameBoard extends React.Component {
     // We'll make an API request to get the current game being played (the last started)
     axios.get(Constants.GAMES_ENDPOINT)
       .then((result) => {
+        const currentGame = result.data[0];
+
         this.setState({
           isLoaded: true,
           // Remember that the games come back sorted by last started
-          currentGame: result.data[0]
+          currentGame: currentGame,
+          tiles: currentGame.tile_set
         });
       })
       .catch((error) => {
@@ -49,7 +52,8 @@ class GameBoard extends React.Component {
       .then((result) => {
         this.setState({
           isStartingNewGame: false,
-          currentGame: result.data
+          currentGame: result.data,
+          tiles: result.data.tile_set
         });
       })
       .catch((error) => {
@@ -60,16 +64,64 @@ class GameBoard extends React.Component {
       })
   }
 
-  handleTileRightClick(event, tile) {
-    console.log('right click');
-    console.log(tile);
+  handleTileRightClick(event, clickedTile) {
     event.preventDefault();
+
+    // On left click of a tile, we will "open" the tile.
+    // We do this by making a PUT call to the server with
+    // the tile that we want to open
+    axios.put(Constants.TILE_ENDPOINT + clickedTile.id + '/', {
+      status: clickedTile.status === 'Flagged' ? 'Closed' : 'Flagged'
+    })
+    .then((result) => {
+      // We can't modify the tiles individually so we'll have to make
+      // a copy and set them that way
+      let updatedTiles = Object.assign(this.state.tiles);
+      let editedTile = updatedTiles.find((tile) => tile.id === clickedTile.id);
+      editedTile.status = result.data.status;
+      editedTile.is_mine = result.data.is_mine;
+      editedTile.neighbouring_mines = result.data.neighbouring_mines;
+
+      // Now update the state
+      this.setState({
+        tiles: updatedTiles
+      })
+    })
+    .catch((error) => {
+      this.setState({
+        error
+      });
+    });
   }
 
-  handleTileLeftClick(event, tile) {
-    console.log('left click');
-    console.log(tile);
+  handleTileLeftClick(event, clickedTile) {
     event.preventDefault();
+
+    // On left click of a tile, we will "open" the tile.
+    // We do this by making a PUT call to the server with
+    // the tile that we want to open
+    axios.put(Constants.TILE_ENDPOINT + clickedTile.id + '/', {
+      status: 'Opened'
+    })
+    .then((result) => {
+      // We can't modify the tiles individually so we'll have to make
+      // a copy and set them that way
+      let updatedTiles = Object.assign(this.state.tiles);
+      let editedTile = updatedTiles.find((tile) => tile.id === clickedTile.id);
+      editedTile.status = result.data.status;
+      editedTile.is_mine = result.data.is_mine;
+      editedTile.neighbouring_mines = result.data.neighbouring_mines;
+
+      // Now update the state
+      this.setState({
+        tiles: updatedTiles
+      })
+    })
+    .catch((error) => {
+      this.setState({
+        error
+      });
+    });
   }
 
   render() {
@@ -77,7 +129,7 @@ class GameBoard extends React.Component {
     if (error) {
       return (
         <div className="text-center">
-          <div>Error: {error.message}</div>
+          <div>Fatal Error: {error.message}</div>
         </div>
       );
     } else if (!isLoaded) {
@@ -100,7 +152,7 @@ class GameBoard extends React.Component {
               disabled={isStartingNewGame}
               onClick={!isStartingNewGame ? this.handleNewGameClick.bind(this) : null}
             >
-              New Game
+            New Game
             </Button>
             <FlagCounter tiles={this.state.currentGame.tile_set} totalMines={gameDifficulty.num_mines} />
             <div><br /></div>
@@ -108,8 +160,8 @@ class GameBoard extends React.Component {
               rows={rows} 
               cols={columns} 
               tiles={this.state.currentGame.tile_set} 
-              onLeftClick={this.handleTileLeftClick} 
-              onRightClick={this.handleTileRightClick}
+              onLeftClick={this.handleTileLeftClick.bind(this)} 
+              onRightClick={this.handleTileRightClick.bind(this)}
               />
           </div>
 

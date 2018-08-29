@@ -78,7 +78,7 @@ class Game(models.Model):
         for i in range(rows):
             for j in range(cols):
                 tile = Tile.objects.create(
-                    game=self, 
+                    game=self,
                     is_mine=mine_matrix[i][j]==-1, 
                     neighbouring_mines=mine_matrix[i][j],
                     row=i,
@@ -102,7 +102,7 @@ class Tile(models.Model):
     )
 
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    status = models.CharField(max_length=7, choices=TILE_STATUS)
+    status = models.CharField(max_length=7, choices=TILE_STATUS, default=TILE_STATUS[0][0])
     row = models.IntegerField(default=0)
     column = models.IntegerField(default=0)
     is_mine = models.BooleanField()

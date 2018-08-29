@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
+import logo from './images/minesweeper_logo.png';
 import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
 import GameBoard from './components/GameBoard';
 import Constants from './helpers/Constants';
@@ -68,7 +69,10 @@ class App extends Component {
           <Navbar>
             <Navbar.Header>
               <Navbar.Brand>
-                <a href="/">Minesweeper</a>
+                <img src={logo} alt="logo" />
+              </Navbar.Brand>
+              <Navbar.Brand>
+                Minesweeper
               </Navbar.Brand>
             </Navbar.Header>
             <Nav>
