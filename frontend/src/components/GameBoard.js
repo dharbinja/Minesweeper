@@ -1,10 +1,12 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import axios from 'axios';
+import Spinner from 'react-spinkit';
 import Constants from '../helpers/Constants';
 import TileGrid from './TileGrid';
 import GameTimer from './GameTimer';
 import FlagCounter from './FlagCounter';
+import LoadingSpinner from './LoadingSpinner';
 
 class GameBoard extends React.Component {
   constructor(props) {
@@ -69,7 +71,7 @@ class GameBoard extends React.Component {
     } else if (!isLoaded) {
       return (
         <div className="text-center">
-          <div>Loading...</div>
+          <Spinner name='circle'/>
         </div>
       );
     } else {
@@ -89,11 +91,13 @@ class GameBoard extends React.Component {
               onClick={!isStartingNewGame ? this.handleNewGameClick.bind(this) : null}
             >
               New Game
-                        </Button>
+            </Button>
             <FlagCounter tiles={this.state.currentGame.tile_set} totalMines={gameDifficulty.num_mines} />
             <div><br /></div>
             <TileGrid rows={rows} cols={columns} tiles={this.state.currentGame.tile_set} />
           </div>
+
+          {isStartingNewGame && <LoadingSpinner spinnerText="Starting New Game..."/>}
         </div>
       )
     }

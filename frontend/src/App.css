@@ -28,8 +28,41 @@
   top: 0;
 }
 
+/* Position the flag counter to the top right */
 .minesweeper-flag-counter {
   position: absolute;
   top: 0;
   right: 0;
+}
+
+/* A spinner overlay while we load data */
+.spinner-overlay {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+  background-color: lightgray;
+  opacity: 0.5;
+}
+
+/* Center our spinner */
+.spinner-overlay, .spinner-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Override the spinner so it's a bit bigger */
+.spinner-overlay .sk-circle {
+  width: 40px;
+  height: 40px;
+}
+
+/* Style the text of the spinner */
+.spinner-overlay .spinner-text {
+  padding-left: 10px;
+  font-size: 18px;
+  color: purple;
+  font-weight: 500;
 }

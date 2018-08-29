@@ -4,6 +4,7 @@ import './App.css';
 import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
 import GameBoard from './components/GameBoard';
 import Constants from './helpers/Constants';
+import LoadingSpinner from './components/LoadingSpinner';
 
 class App extends Component {
   constructor(props) {
@@ -11,20 +12,27 @@ class App extends Component {
     this.state = {
       difficulties: [],
       selectedDifficultyId: null,
+      isLoading: false,
       error: null
     }
   }
 
   componentDidMount() {
+    this.setState({
+      isLoading: true
+    })
+
     // We'll pre-load the difficulties
     axios.get(Constants.DIFFICULTY_ENDPOINT)
       .then((result) => {
         this.setState({
+          isLoading: false,
           difficulties: result.data,
         });
       })
       .catch((error) => {
         this.setState({
+          isLoading: false,
           error
         });
       });
@@ -37,7 +45,7 @@ class App extends Component {
   }
 
   render() {
-    const error = this.state.error;
+    const { error, isLoading } = this.state;
     if (error) {
       return (
         <div>There was an error loading the game. Please try again.</div>
@@ -45,7 +53,7 @@ class App extends Component {
     } else {
       let difficultyElements = this.state.difficulties.map((difficulty) => {
         return (
-          <MenuItem eventKey={difficulty.id} onSelect={this.handleDifficultySelect.bind(this)}>{difficulty.name}</MenuItem> 
+          <MenuItem key={difficulty.id} eventKey={difficulty.id} onSelect={this.handleDifficultySelect.bind(this)}>{difficulty.name}</MenuItem> 
         )
       });
 
@@ -73,6 +81,8 @@ class App extends Component {
           </Navbar>
 
           <GameBoard difficulties={this.state.difficulties} selectedDifficultyId={this.state.selectedDifficultyId}/>
+
+          {isLoading && <LoadingSpinner/>}
         </div>
       );
     }
