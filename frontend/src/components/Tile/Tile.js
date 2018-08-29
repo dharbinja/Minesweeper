@@ -1,6 +1,9 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import './Tile.css';
+import flagImg from '../../images/flag.png';
+import nonExplodedBomb from '../../images/non_exploded_bomb.png';
+import explodedBomb from '../../images/exploded_bomb.jpg';
 
 class Tile extends React.Component {
   constructor(props) {
@@ -29,9 +32,19 @@ class Tile extends React.Component {
   render() {
     let content = ''
     if (this.props.tile.status === 'Opened') {
-      content = this.props.tile.is_mine ? 'B' : this.props.tile.neighbouring_mines;
+      content = this.props.tile.is_mine ? 
+        (
+          <img src={explodedBomb} alt="exploded-bomb" className="minesweeper-flag"></img>
+        ) : 
+        ( 
+          <span className={"minesweeper-number-" + this.props.tile.neighbouring_mines}>
+            {this.props.tile.neighbouring_mines}
+          </span>
+        );
     } else if (this.props.tile.status === 'Flagged') {
-      content = 'F';
+      content = (
+        <img src={flagImg} alt="flag" className="minesweeper-flag"></img>
+      );
     }
 
     return (
