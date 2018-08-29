@@ -22,6 +22,7 @@ class Game(models.Model):
     time_ended = models.DateTimeField(null=True, blank=True)
     difficulty = models.ForeignKey(Difficulty, on_delete=models.PROTECT, null=True)
     result = models.CharField(max_length=20, default='')
+    opened_tiles = models.IntegerField(default=0)
 
     def __str__(self):
         """String representation of the Game model."""
@@ -123,11 +124,27 @@ class Game(models.Model):
         This function will open all the neighbours of a tile if they are already unopened. This
         function is mostly useful when you click on a tile that has no mines around it.
         """
-        print('checking neighbours')
         neighbour_ids = []
         self.get_all_neighbours_to_be_opened(tile, neighbour_ids)
         #print(neighbour_ids)
-        Tile.objects.filter(pk__in=neighbour_ids).update(status='Opened')            
+        Tile.objects.filter(pk__in=neighbour_ids).update(status='Opened')
+        self.opened_tiles = self.opened_tiles + len(neighbour_ids)        
+
+    def open_tile(self, tile):
+        """
+        Opens a particular tile in the game
+        """
+        if tile.is_mine:
+            self.game_lost()
+        else:
+            # Open all the neighbours
+            if tile.neighbouring_mines == 0:
+                self.open_neighbours(tile)
+        
+            # Open up the mine
+            self.opened_tiles = self.opened_tiles + 1
+            self.save()
+            self.check_win_scenario()
 
     def game_lost(self):
         """
@@ -140,16 +157,15 @@ class Game(models.Model):
         # We'll open all the unexploded mines to show the user where they were
         uncleared_mines = self.tile_set.all().filter(status='Closed', is_mine=True).update(status='Opened')
 
-    def check_win_scenarios(self):
+    def check_win_scenario(self):
         """
         Checks if we have won the game. We win if we have opened all non-mine tiles
         """
 
         # We have won the game if we've opened all non-mine tiles
         num_non_mine_tiles = (self.difficulty.rows * self.difficulty.columns) - self.difficulty.num_mines
-        opened_non_mine_tiles = self.tile_set.all().filter(status='Opened', is_mine=False)
 
-        if num_non_mine_tiles == opened_non_mine_tiles.count():
+        if num_non_mine_tiles == self.opened_tiles:
             self.time_ended = timezone.now()
             self.result = 'Win'
             self.save()

@@ -89,6 +89,7 @@ class GameBoard extends React.Component {
     })
       .then((result) => {
         this.setState({
+          isLoaded: true,
           isStartingNewGame: false,
           currentGame: result.data,
           tiles: result.data.tile_set
@@ -96,6 +97,7 @@ class GameBoard extends React.Component {
       })
       .catch((error) => {
         this.setState({
+          isLoaded: true,
           isStartingNewGame: false,
           error
         });

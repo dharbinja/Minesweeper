@@ -19,13 +19,7 @@ def post_tile_updated(sender, instance, **kwargs):
     If we opened a tile that is not a mine and has 0 neighbouring mines, we will
     Open up the neighbours of that tile as well (recursively)
     """
-    if instance.status == 'Opened' and not instance.is_mine and instance.neighbouring_mines == 0:
-        instance.game.open_neighbours(instance)
-    elif instance.status == 'Opened' and instance.is_mine:
-        instance.game.game_lost()
-
-    # Check to see if we've won the game
-    # TODO: Optimize win checking some more ?
-    instance.game.check_win_scenarios()
+    if instance.status == 'Opened':
+        instance.game.open_tile(instance)
         
          
