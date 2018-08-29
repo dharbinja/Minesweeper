@@ -1,5 +1,6 @@
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 from .models import Game, Tile
 
@@ -20,8 +21,11 @@ def post_tile_updated(sender, instance, **kwargs):
     """
     if instance.status == 'Opened' and not instance.is_mine and instance.neighbouring_mines == 0:
         instance.game.open_neighbours(instance)
+    elif instance.status == 'Opened' and instance.is_mine:
+        instance.game.game_lost()
 
-    # Check to see if we've won or lost the game
-    instance.game.check_win_loss_scenarios()
+    # Check to see if we've won the game
+    # TODO: Optimize win checking some more ?
+    instance.game.check_win_scenarios()
         
          

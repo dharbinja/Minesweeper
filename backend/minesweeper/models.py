@@ -4,6 +4,7 @@ from datetime import datetime
 from random import sample
 
 from django.db import models
+from django.utils import timezone
 
 class Difficulty(models.Model):
     name = models.CharField(max_length=20, null=True)
@@ -69,21 +70,27 @@ class Game(models.Model):
                     if mine_matrix[neighbour_row][neighbour_col] != -1:
                         mine_matrix[neighbour_row][neighbour_col] += 1
 
+        # We'll create a list of tiles we want to create here, so that we can do a bulk create later
+        # it should be significantly faster
+        tile_dictionary = []
         for i in range(rows):
             for j in range(cols):
-                tile = Tile.objects.create(
-                    game=self,
-                    is_mine=mine_matrix[i][j]==-1, 
-                    neighbouring_mines=mine_matrix[i][j],
-                    row=i,
-                    column=j,
-                )
-                tile.save()
+                tile = {
+                    "game": self,
+                    "is_mine": mine_matrix[i][j]==-1, 
+                    "neighbouring_mines": mine_matrix[i][j],
+                    "row": i,
+                    "column": j,
+                }
+                tile_dictionary.append(tile)
 
-    def open_neighbours(self, tile):
+        # Do a bulk create
+        Tile.objects.bulk_create([Tile(**tile) for tile in tile_dictionary])
+
+    def get_all_neighbours_to_be_opened(self, tile, id_list):
         """
-        This function will open all the neighbours of a tile if they are already unopened. This
-        function is mostly useful when you click on a tile that has no mines around it.
+        Recursive function that will iterate and open all neighbours of tiles that
+        have zero mines around them.
         """
         # Loop over all the neighbours and see if they need to be opened as well
         for x in range(-1, 2):
@@ -102,40 +109,50 @@ class Game(models.Model):
 
                 # Now we need to find the tile
                 neighbour_tile = self.tile_set.all().get(row=neighbour_row, column=neighbour_col)
-                if (neighbour_tile.status == 'Closed'):
-                    neighbour_tile.status = 'Opened'
+                if (neighbour_tile.status == 'Closed' and neighbour_tile.id not in id_list):
+                    # Add it to the list of Ids, we'll bulk update later
+                    id_list.append(neighbour_tile.id)
 
-                    # Saving the neighbour here will make a recursive call if the tile also has
-                    # no mines around it
-                    neighbour_tile.save()
+                    # Make a recursive call to open up all the neighbours of this tile if necessary
+                    if not neighbour_tile.is_mine and neighbour_tile.neighbouring_mines == 0:
+                        self.get_all_neighbours_to_be_opened(neighbour_tile, id_list)
 
-    def check_win_loss_scenarios(self):
+
+    def open_neighbours(self, tile):
         """
-        Checks if we have won or lost the game. We lose if we have "stepped on" a mine,
-        and we win if we have opened all non-mine tiles
+        This function will open all the neighbours of a tile if they are already unopened. This
+        function is mostly useful when you click on a tile that has no mines around it.
+        """
+        print('checking neighbours')
+        neighbour_ids = []
+        self.get_all_neighbours_to_be_opened(tile, neighbour_ids)
+        #print(neighbour_ids)
+        Tile.objects.filter(pk__in=neighbour_ids).update(status='Opened')            
+
+    def game_lost(self):
+        """
+        We've lost the game by "stepping" on a mine, so we'll set the result and the time ended
+        """
+        self.time_ended = timezone.now()
+        self.result = 'Loss'
+        self.save()
+
+        # We'll open all the unexploded mines to show the user where they were
+        uncleared_mines = self.tile_set.all().filter(status='Closed', is_mine=True).update(status='Opened')
+
+    def check_win_scenarios(self):
+        """
+        Checks if we have won the game. We win if we have opened all non-mine tiles
         """
 
-        # We have lost the game if we've clicked on any tile that's a mine
-        stepped_on_mine = self.tile_set.all().filter(status='Opened', is_mine=True)
-        if stepped_on_mine.count() > 0:
-            self.time_ended = datetime.now()
-            self.result = 'Loss'
+        # We have won the game if we've opened all non-mine tiles
+        num_non_mine_tiles = (self.difficulty.rows * self.difficulty.columns) - self.difficulty.num_mines
+        opened_non_mine_tiles = self.tile_set.all().filter(status='Opened', is_mine=False)
+
+        if num_non_mine_tiles == opened_non_mine_tiles.count():
+            self.time_ended = timezone.now()
+            self.result = 'Win'
             self.save()
-
-            # We'll open all the unexploded mines to show the user where they were
-            uncleared_mines = self.tile_set.all().filter(status='Closed', is_mine=True)
-            for mine in uncleared_mines:
-                mine.status = 'Opened'
-                mine.save()
-        else:
-            # We have won the game if we've opened all non-mine tiles
-            num_non_mine_tiles = (self.difficulty.rows * self.difficulty.columns) - self.difficulty.num_mines
-            opened_non_mine_tiles = self.tile_set.all().filter(status='Opened', is_mine=False)
-
-            if num_non_mine_tiles == opened_non_mine_tiles.count():
-                self.time_ended = datetime.now()
-                self.result = 'Win'
-                self.save()
 
 
     # We'll have the games sorted by time started so that the first one will always be the
