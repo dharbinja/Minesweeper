@@ -9,7 +9,7 @@ class FlagCounter extends React.Component {
     return (
       <div className="minesweeper-flag-counter">
         <img src={flag} alt="flag" />
-        <span>{flaggedTiles.length}/{this.props.totalMines}</span>
+        <span>{flaggedTiles.length}</span>
       </div>
     )
   }

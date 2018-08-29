@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button, Glyphicon } from 'react-bootstrap';
 import axios from 'axios';
 import './GameBoard.css';
 import Constants from '../../helpers/Constants';
@@ -7,6 +6,7 @@ import TileGrid from '../TileGrid/TileGrid';
 import GameTimer from '../GameTimer/GameTimer';
 import FlagCounter from '../FlagCounter/FlagCounter';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import NewGameButton from '../NewGameButton/NewGameButton';
 
 class GameBoard extends React.Component {
   constructor(props) {
@@ -20,6 +20,10 @@ class GameBoard extends React.Component {
       currentGame: null,
       tiles: []
     }
+
+    this.handleNewGameClick = this.handleNewGameClick.bind(this);
+    this.handleTileLeftClick = this.handleTileLeftClick.bind(this);
+    this.handleTileRightClick = this.handleTileRightClick.bind(this);
   }
 
   getGameStateFromServer() {
@@ -187,23 +191,16 @@ class GameBoard extends React.Component {
           <div className="minesweeper-board-container">
             <div className="minesweeper-board-header">
               <GameTimer timeStarted={currentGame.time_started} timeEnded={currentGame.time_ended} />
-              <Button
-                disabled={isStartingNewGame}
-                onClick={!isStartingNewGame ? this.handleNewGameClick.bind(this) : null}
-              >
-                <Glyphicon glyph="play"/>
-              </Button>
+              <NewGameButton isStartingNewGame={isStartingNewGame} result={currentGame.result} onClick={this.handleNewGameClick}/>
               <FlagCounter tiles={this.state.currentGame.tile_set} totalMines={gameDifficulty.num_mines} />
             </div>
             <TileGrid 
               rows={rows} 
               cols={columns} 
               tiles={this.state.currentGame.tile_set} 
-              onLeftClick={this.handleTileLeftClick.bind(this)} 
-              onRightClick={this.handleTileRightClick.bind(this)}
+              onLeftClick={this.handleTileLeftClick} 
+              onRightClick={this.handleTileRightClick}
               />
-
-            <div>{currentGame.result}</div>
           </div>
 
           {isStartingNewGame && <LoadingSpinner spinnerText="Starting New Game..."/>}

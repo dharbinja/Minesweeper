@@ -3,19 +3,19 @@
   position: absolute;
   left: 5px;
   top: 12px;
-  font-size: 16px;
-  padding: 5px;
+  font-size: 14px;
+  padding: 5px 0px;
   text-align: left;
   min-width: 70px;
   color: darkred;
 }
 
 .minesweeper-timer img {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   vertical-align: baseline;
 }
 
 .minesweeper-timer span {
-  padding-left: 10px;
+  padding-left: 7px;
 }

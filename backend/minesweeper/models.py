@@ -127,7 +127,6 @@ class Game(models.Model):
         neighbour_ids = []
         self.get_all_neighbours_to_be_opened(tile, neighbour_ids)
         Tile.objects.filter(pk__in=neighbour_ids).update(status='Opened')
-        self.opened_tiles = self.opened_tiles + len(neighbour_ids)        
 
     def open_tile(self, tile):
         """
@@ -149,9 +148,7 @@ class Game(models.Model):
             if tile.neighbouring_mines == 0:
                 self.open_neighbours(tile)
         
-            # Open up the mine
-            self.opened_tiles = self.opened_tiles + 1
-            self.save()
+            # Check the win scenario
             self.check_win_scenario()
 
     def game_lost(self):
@@ -175,11 +172,16 @@ class Game(models.Model):
 
         # We have won the game if we've opened all non-mine tiles
         num_non_mine_tiles = (self.difficulty.rows * self.difficulty.columns) - self.difficulty.num_mines
+        num_opened_non_mine_tiles = self.tile_set.filter(status="Opened").count()
 
-        if num_non_mine_tiles == self.opened_tiles:
+        if num_non_mine_tiles == num_opened_non_mine_tiles:
+            # Set the result to won
             self.time_ended = timezone.now()
             self.result = 'Win'
             self.save()
+
+            # Set all the mines to flagged
+            self.tile_set.all().filter(is_mine=True).update(status='Flagged')
 
 
     # We'll have the games sorted by time started so that the first one will always be the
@@ -209,6 +211,3 @@ class Tile(models.Model):
     def __str__(self):
         """String representation of the Tile model."""
         return "Tile"
-
-    class Meta:
-        ordering = ['row', 'column']
