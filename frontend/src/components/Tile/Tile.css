@@ -1,0 +1,17 @@
+/* The minesweeper "tile" */
+.minesweeper-tile {
+  width: 25px;
+  height: 25px;
+  padding: 2px 9px;
+  border-radius: 0px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+  
+/* Make an opened mine look a bit different */
+.minesweeper-tile-opened {
+  background-color: #e0e0e0;
+  border-color: #dbdbdb;
+  background-image: none;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}

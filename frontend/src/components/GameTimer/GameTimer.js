@@ -1,4 +1,5 @@
 import React from 'react';
+import './GameTimer.css';
 
 const MAX_TIME_ELAPSED = 999;
 

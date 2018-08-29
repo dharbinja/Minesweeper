@@ -1,5 +1,6 @@
 import React from 'react';
-import TileRow from './TileRow'
+import TileRow from '../TileRow/TileRow';
+import './TileGrid.css';
 
 class TileGrid extends React.Component {
   render() {

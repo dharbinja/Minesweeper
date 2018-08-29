@@ -1,0 +1,7 @@
+/* The minesweeper grid of tiles */
+.minesweeper-grid {
+  /* Prevent wrapping of the tiles */
+  overflow: auto;
+  white-space: nowrap;
+}
+  

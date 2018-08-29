@@ -1,0 +1,5 @@
+/* The wrapper holding the minesweeper board */
+.minesweeper-board-container {
+  position: relative;
+  display: inline-block;
+}

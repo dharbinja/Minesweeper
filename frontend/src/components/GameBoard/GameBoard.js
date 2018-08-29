@@ -1,11 +1,12 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import axios from 'axios';
-import Constants from '../helpers/Constants';
-import TileGrid from './TileGrid';
-import GameTimer from './GameTimer';
-import FlagCounter from './FlagCounter';
-import LoadingSpinner from './LoadingSpinner';
+import './GameBoard.css';
+import Constants from '../../helpers/Constants';
+import TileGrid from '../TileGrid/TileGrid';
+import GameTimer from '../GameTimer/GameTimer';
+import FlagCounter from '../FlagCounter/FlagCounter';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 class GameBoard extends React.Component {
   constructor(props) {

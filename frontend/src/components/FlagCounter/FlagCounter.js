@@ -1,4 +1,5 @@
 import React from 'react';
+import './FlagCounter.css';
 
 class FlagCounter extends React.Component {
   render() {

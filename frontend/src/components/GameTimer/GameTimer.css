@@ -1,0 +1,6 @@
+/* The timer at the top left */
+.minesweeper-timer {
+  position: absolute;
+  left: 0;
+  top: 0;
+}

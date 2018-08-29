@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
+import './Tile.css';
 
 class Tile extends React.Component {
   constructor(props) {

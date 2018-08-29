@@ -3,9 +3,9 @@ import axios from 'axios';
 import './App.css';
 import logo from './images/minesweeper_logo.png';
 import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
-import GameBoard from './components/GameBoard';
+import GameBoard from './components/GameBoard/GameBoard';
 import Constants from './helpers/Constants';
-import LoadingSpinner from './components/LoadingSpinner';
+import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 
 class App extends Component {
   constructor(props) {

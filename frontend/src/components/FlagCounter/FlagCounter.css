@@ -1,0 +1,6 @@
+/* Position the flag counter to the top right */
+.minesweeper-flag-counter {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
