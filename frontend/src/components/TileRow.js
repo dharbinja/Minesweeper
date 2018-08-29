@@ -4,7 +4,7 @@ import Tile from './Tile'
 class TileRow extends React.Component {
   render() {
     const content = this.props.row.map((tile) =>
-      <Tile tile={tile} key={tile.id} />
+      <Tile tile={tile} key={tile.id} onLeftClick={this.props.onLeftClick} onRightClick={this.props.onRightClick} />
     )
 
     return (

@@ -11,7 +11,11 @@ class Tile extends React.Component {
     }
 
     return (
-      <Button className="minesweeper-tile">
+      <Button 
+        className="minesweeper-tile" 
+        onClick={(e) => this.props.onLeftClick(e, this.props.tile)}
+        onContextMenu={(e) => this.props.onRightClick(e, this.props.tile)}
+        >
         {content}
       </Button>
     )

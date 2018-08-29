@@ -60,6 +60,18 @@ class GameBoard extends React.Component {
       })
   }
 
+  handleTileRightClick(event, tile) {
+    console.log('right click');
+    console.log(tile);
+    event.preventDefault();
+  }
+
+  handleTileLeftClick(event, tile) {
+    console.log('left click');
+    console.log(tile);
+    event.preventDefault();
+  }
+
   render() {
     const { error, isLoaded, isStartingNewGame } = this.state;
     if (error) {
@@ -70,9 +82,7 @@ class GameBoard extends React.Component {
       );
     } else if (!isLoaded) {
       return (
-        <div className="text-center">
-          <Spinner name='circle'/>
-        </div>
+        <LoadingSpinner spinnerText="Loading Game Data..." />
       );
     } else {
       // Build our Game Grid
@@ -94,7 +104,13 @@ class GameBoard extends React.Component {
             </Button>
             <FlagCounter tiles={this.state.currentGame.tile_set} totalMines={gameDifficulty.num_mines} />
             <div><br /></div>
-            <TileGrid rows={rows} cols={columns} tiles={this.state.currentGame.tile_set} />
+            <TileGrid 
+              rows={rows} 
+              cols={columns} 
+              tiles={this.state.currentGame.tile_set} 
+              onLeftClick={this.handleTileLeftClick} 
+              onRightClick={this.handleTileRightClick}
+              />
           </div>
 
           {isStartingNewGame && <LoadingSpinner spinnerText="Starting New Game..."/>}

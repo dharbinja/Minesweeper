@@ -10,7 +10,7 @@ class TileGrid extends React.Component {
     }
 
     const content = tileRows.map((tileRow, index) =>
-      <TileRow key={index} row={tileRow} />
+      <TileRow key={index} row={tileRow} onLeftClick={this.props.onLeftClick} onRightClick={this.props.onRightClick}/>
     )
 
     return (
