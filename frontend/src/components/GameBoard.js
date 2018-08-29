@@ -44,12 +44,18 @@ class GameBoard extends React.Component {
       .then((result) => {
         const currentGame = result.data[0];
 
-        this.setState({
-          isLoaded: true,
-          // Remember that the games come back sorted by last started
-          currentGame: currentGame,
-          tiles: currentGame.tile_set
-        });
+        if (currentGame) {
+          // A game already exist, we'll continue it
+          this.setState({
+            isLoaded: true,
+            // Remember that the games come back sorted by last started
+            currentGame: currentGame,
+            tiles: currentGame.tile_set
+          });
+        } else {
+          // No game exists, we'll start a new one
+          return this.createNewGame()
+        }
       })
       .catch((error) => {
         this.setState({
@@ -60,11 +66,26 @@ class GameBoard extends React.Component {
   }
 
   handleNewGameClick() {
+    this.createNewGame();
+  }
+
+  createNewGame() {
     this.setState({ isStartingNewGame: true });
 
+    // Default to Easy
+    let newDifficulty = 1;
+    // Top precedence goes to the selected difficulty that's passed in
+    if (this.props.selectedDifficultyId) {
+      newDifficulty = this.props.selectedDifficultyId;
+    }
+    // Secondary precedence goes to the current game difficulty 
+    else if (this.state.currentGame) {
+      newDifficulty = this.state.currentGame.difficulty;
+    }
+
     // Here we'll start a new game
-    axios.post(Constants.GAMES_ENDPOINT, {
-      difficulty: this.props.selectedDifficultyId || this.state.currentGame.difficulty
+    return axios.post(Constants.GAMES_ENDPOINT, {
+      difficulty: newDifficulty
     })
       .then((result) => {
         this.setState({
@@ -83,6 +104,11 @@ class GameBoard extends React.Component {
 
   handleTileRightClick(event, clickedTile) {
     event.preventDefault();
+
+    // We'll ignore the click if the game is over
+    if (this.state.currentGame.result !== '') {
+      return;
+    }
 
     // On right click of a tile, we will "flag"/"unflag" the tile.
     // We do this by making a PUT call to the server with
@@ -114,6 +140,11 @@ class GameBoard extends React.Component {
   handleTileLeftClick(event, clickedTile) {
     event.preventDefault();
 
+    // We'll ignore the click if the game is over
+    if (this.state.currentGame.result !== '') {
+      return;
+    }
+
     // On left click of a tile, we will "open" the tile.
     // We do this by making a PUT call to the server with
     // the tile that we want to open
@@ -131,7 +162,7 @@ class GameBoard extends React.Component {
   }
 
   render() {
-    const { error, isLoaded, isStartingNewGame } = this.state;
+    const { error, isLoaded, isStartingNewGame, currentGame } = this.state;
     if (error) {
       return (
         <div className="text-center">
@@ -144,7 +175,6 @@ class GameBoard extends React.Component {
       );
     } else {
       // Build our Game Grid
-      const currentGame = this.state.currentGame;
       const gameDifficulty = this.props.difficulties.find(difficulty => difficulty.id === currentGame.difficulty);
       const rows = gameDifficulty.rows;
       const columns = gameDifficulty.columns;
@@ -152,7 +182,7 @@ class GameBoard extends React.Component {
       return (
         <div className="text-center">
           <div className="minesweeper-board-container">
-            <GameTimer timeStarted={currentGame.time_started} />
+            <GameTimer timeStarted={currentGame.time_started} timeEnded={currentGame.time_ended} />
             <Button
               bsStyle="primary"
               disabled={isStartingNewGame}
@@ -169,6 +199,8 @@ class GameBoard extends React.Component {
               onLeftClick={this.handleTileLeftClick.bind(this)} 
               onRightClick={this.handleTileRightClick.bind(this)}
               />
+
+            <div>{currentGame.result}</div>
           </div>
 
           {isStartingNewGame && <LoadingSpinner spinnerText="Starting New Game..."/>}

@@ -20,6 +20,7 @@ class Game(models.Model):
     time_started = models.DateTimeField(default=datetime.now)
     time_ended = models.DateTimeField(null=True, blank=True)
     difficulty = models.ForeignKey(Difficulty, on_delete=models.PROTECT, null=True)
+    result = models.CharField(max_length=20, default='')
 
     def __str__(self):
         """String representation of the Game model."""
@@ -107,6 +108,35 @@ class Game(models.Model):
                     # Saving the neighbour here will make a recursive call if the tile also has
                     # no mines around it
                     neighbour_tile.save()
+
+    def check_win_loss_scenarios(self):
+        """
+        Checks if we have won or lost the game. We lose if we have "stepped on" a mine,
+        and we win if we have opened all non-mine tiles
+        """
+
+        # We have lost the game if we've clicked on any tile that's a mine
+        stepped_on_mine = self.tile_set.all().filter(status='Opened', is_mine=True)
+        if stepped_on_mine.count() > 0:
+            self.time_ended = datetime.now()
+            self.result = 'Loss'
+            self.save()
+
+            # We'll open all the unexploded mines to show the user where they were
+            uncleared_mines = self.tile_set.all().filter(status='Closed', is_mine=True)
+            for mine in uncleared_mines:
+                mine.status = 'Opened'
+                mine.save()
+        else:
+            # We have won the game if we've opened all non-mine tiles
+            num_non_mine_tiles = (self.difficulty.rows * self.difficulty.columns) - self.difficulty.num_mines
+            opened_non_mine_tiles = self.tile_set.all().filter(status='Opened', is_mine=False)
+
+            if num_non_mine_tiles == opened_non_mine_tiles.count():
+                self.time_ended = datetime.now()
+                self.result = 'Win'
+                self.save()
+
 
     # We'll have the games sorted by time started so that the first one will always be the
     # "current game". That way when retrieving games it'll make it easier for us to get the

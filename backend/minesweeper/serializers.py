@@ -55,4 +55,8 @@ class GameSerializer(serializers.ModelSerializer):
             'time_ended',
             'tile_set',
             'difficulty',
+            'result',
+        )
+        read_only_fields = (
+            'result',
         )

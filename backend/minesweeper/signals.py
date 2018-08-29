@@ -20,5 +20,8 @@ def post_tile_updated(sender, instance, **kwargs):
     """
     if instance.status == 'Opened' and not instance.is_mine and instance.neighbouring_mines == 0:
         instance.game.open_neighbours(instance)
+
+    # Check to see if we've won or lost the game
+    instance.game.check_win_loss_scenarios()
         
          
