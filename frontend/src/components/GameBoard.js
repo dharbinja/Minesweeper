@@ -21,6 +21,23 @@ class GameBoard extends React.Component {
     }
   }
 
+  getGameStateFromServer() {
+    return axios.get(Constants.GAMES_ENDPOINT + this.state.currentGame.id + '/')
+      .then((result) => {
+        const currentGame = result.data;
+
+        this.setState({
+          currentGame: currentGame,
+          tiles: currentGame.tile_set
+        });
+      })
+      .catch((error) => {
+        this.setState({
+          error
+        });
+      });
+  }
+
   componentDidMount() {
     // We'll make an API request to get the current game being played (the last started)
     axios.get(Constants.GAMES_ENDPOINT)
@@ -67,9 +84,9 @@ class GameBoard extends React.Component {
   handleTileRightClick(event, clickedTile) {
     event.preventDefault();
 
-    // On left click of a tile, we will "open" the tile.
+    // On right click of a tile, we will "flag"/"unflag" the tile.
     // We do this by making a PUT call to the server with
-    // the tile that we want to open
+    // the tile that we want to flag/unflag
     axios.put(Constants.TILE_ENDPOINT + clickedTile.id + '/', {
       status: clickedTile.status === 'Flagged' ? 'Closed' : 'Flagged'
     })
@@ -103,19 +120,8 @@ class GameBoard extends React.Component {
     axios.put(Constants.TILE_ENDPOINT + clickedTile.id + '/', {
       status: 'Opened'
     })
-    .then((result) => {
-      // We can't modify the tiles individually so we'll have to make
-      // a copy and set them that way
-      let updatedTiles = Object.assign(this.state.tiles);
-      let editedTile = updatedTiles.find((tile) => tile.id === clickedTile.id);
-      editedTile.status = result.data.status;
-      editedTile.is_mine = result.data.is_mine;
-      editedTile.neighbouring_mines = result.data.neighbouring_mines;
-
-      // Now update the state
-      this.setState({
-        tiles: updatedTiles
-      })
+    .then(() => {
+      return this.getGameStateFromServer();
     })
     .catch((error) => {
       this.setState({
