@@ -69,7 +69,7 @@ class App extends Component {
           <Navbar>
             <Navbar.Header>
               <Navbar.Brand>
-                <img src={logo} alt="logo" />
+                <img className="logo" src={logo} alt="logo" />
               </Navbar.Brand>
               <Navbar.Brand>
                 Minesweeper
