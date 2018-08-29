@@ -1,5 +1,6 @@
 import React from 'react';
 import './GameTimer.css';
+import clock from '../../images/clock.png';
 
 const MAX_TIME_ELAPSED = 999;
 
@@ -34,26 +35,26 @@ class GameTimer extends React.Component {
   }
 
   render() {
+    let secondsDifference = this.state.secondsElapsed;
     if (this.props.timeEnded) {
+      // Game is over, display the duration in seconds
       const timeStart = new Date(this.props.timeStarted);
       const timeEnd = new Date(this.props.timeEnded);
-      const secondsDifference = this.calculateDifferenceInSeconds(timeStart, timeEnd);
-
-      return (
-        <span className="minesweeper-timer">{secondsDifference}</span>
-      )
-
+      secondsDifference = this.calculateDifferenceInSeconds(timeStart, timeEnd);
     } else {
       // Game is still going, let's keep the timer going
       this.timerID = setInterval(
         () => this.tick(),
         1000
       );
-
-      return (
-        <span className="minesweeper-timer">{this.state.secondsElapsed}</span>
-      )
     }
+
+    return (
+      <div className="minesweeper-timer">
+        <img src={clock} alt="clock" width="20"/>
+        <span>{secondsDifference}</span>
+      </div>
+    )
   }
 }
 

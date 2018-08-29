@@ -9,3 +9,13 @@
     min-width: 70px;
     color: darkred;
   }
+
+  .minesweeper-flag-counter img {
+    width: 14px;
+    height: 18px;
+    vertical-align: baseline;
+  }
+  
+  .minesweeper-flag-counter span {
+    padding-left: 10px;
+  }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Glyphicon } from 'react-bootstrap';
 import axios from 'axios';
 import './GameBoard.css';
 import Constants from '../../helpers/Constants';
@@ -188,11 +188,10 @@ class GameBoard extends React.Component {
             <div className="minesweeper-board-header">
               <GameTimer timeStarted={currentGame.time_started} timeEnded={currentGame.time_ended} />
               <Button
-                bsStyle="primary"
                 disabled={isStartingNewGame}
                 onClick={!isStartingNewGame ? this.handleNewGameClick.bind(this) : null}
               >
-              New Game
+                <Glyphicon glyph="play"/>
               </Button>
               <FlagCounter tiles={this.state.currentGame.tile_set} totalMines={gameDifficulty.num_mines} />
             </div>
