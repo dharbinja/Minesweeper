@@ -3,5 +3,6 @@
   /* Prevent wrapping of the tiles */
   overflow: auto;
   white-space: nowrap;
+  border-top: 5px outset darkgrey;
 }
   

@@ -4,6 +4,7 @@ import './Tile.css';
 import flagImg from '../../images/flag.png';
 import nonExplodedBomb from '../../images/non_exploded_bomb.png';
 import explodedBomb from '../../images/exploded_bomb.jpg';
+import wrongBomb from '../../images/wrong_bomb.png';
 
 class Tile extends React.Component {
   constructor(props) {
@@ -34,16 +35,22 @@ class Tile extends React.Component {
     if (this.props.tile.status === 'Opened') {
       content = this.props.tile.is_mine ? 
         (
-          <img src={explodedBomb} alt="exploded-bomb" className="minesweeper-flag"></img>
+          <img 
+            src={this.props.tile.is_exploded_mine ? explodedBomb : nonExplodedBomb} 
+            alt="bomb" 
+            className="minesweeper-tile-image" />
         ) : 
         ( 
-          <span className={"minesweeper-number-" + this.props.tile.neighbouring_mines}>
+          <span className={"minesweeper-number minesweeper-number-" + this.props.tile.neighbouring_mines}>
             {this.props.tile.neighbouring_mines}
           </span>
         );
     } else if (this.props.tile.status === 'Flagged') {
       content = (
-        <img src={flagImg} alt="flag" className="minesweeper-flag"></img>
+        <img 
+          src={this.props.tile.wrongly_flagged ? wrongBomb : flagImg} 
+          alt="flag" 
+          className="minesweeper-tile-image" />
       );
     }
 

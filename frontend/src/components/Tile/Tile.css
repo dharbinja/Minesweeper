@@ -22,12 +22,18 @@
   box-shadow: none;
 }
 
-/* Minesweeper flag image */
-.minesweeper-flag {
-  width: 25px;
-  height: 25px;
+/* Minesweeper flag and bomb image styles */
+.minesweeper-tile-image {
+  width: 23px;
+  height: 23px;
   padding: 0px;
   margin: 0px;
+}
+
+.minesweeper-number {
+  position: relative;
+  top: 2px;
+  left: 1px;
 }
 
 .minesweeper-number-0 {

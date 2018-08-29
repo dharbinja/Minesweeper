@@ -1,11 +1,11 @@
 /* The timer at the top left */
 .minesweeper-timer {
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 5px;
+  top: 12px;
   font-size: 16px;
-  border: 1px solid darkgray;
   padding: 5px;
-  text-align: right;
+  text-align: left;
   min-width: 70px;
+  color: darkred;
 }

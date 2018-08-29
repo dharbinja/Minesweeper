@@ -126,7 +126,6 @@ class Game(models.Model):
         """
         neighbour_ids = []
         self.get_all_neighbours_to_be_opened(tile, neighbour_ids)
-        #print(neighbour_ids)
         Tile.objects.filter(pk__in=neighbour_ids).update(status='Opened')
         self.opened_tiles = self.opened_tiles + len(neighbour_ids)        
 
@@ -134,8 +133,17 @@ class Game(models.Model):
         """
         Opens a particular tile in the game
         """
+        # We can't open tiles once the game is done
+        if self.result != '':
+            return
+
         if tile.is_mine:
+            # Set the game state to lost
             self.game_lost()
+
+            # Set the tile to be the exploded one
+            tile.is_exploded_mine = True
+            tile.save()
         else:
             # Open all the neighbours
             if tile.neighbouring_mines == 0:
@@ -154,8 +162,11 @@ class Game(models.Model):
         self.result = 'Loss'
         self.save()
 
+        # Set any flagged tiles that aren't mines to be wrongly flagged
+        self.tile_set.all().filter(status='Flagged', is_mine=False).update(wrongly_flagged=True)
+
         # We'll open all the unexploded mines to show the user where they were
-        uncleared_mines = self.tile_set.all().filter(status='Closed', is_mine=True).update(status='Opened')
+        self.tile_set.all().filter(status='Closed', is_mine=True).update(status='Opened')
 
     def check_win_scenario(self):
         """
@@ -191,6 +202,8 @@ class Tile(models.Model):
     row = models.IntegerField(default=0)
     column = models.IntegerField(default=0)
     is_mine = models.BooleanField()
+    is_exploded_mine = models.BooleanField(default=False)
+    wrongly_flagged = models.BooleanField(default=False)
     neighbouring_mines = models.IntegerField()
 
     def __str__(self):

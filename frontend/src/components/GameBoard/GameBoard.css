@@ -2,4 +2,10 @@
 .minesweeper-board-container {
   position: relative;
   display: inline-block;
+  border: 5px outset darkgrey;
+}
+
+.minesweeper-board-header {
+  position: relative;
+  padding: 10px;
 }

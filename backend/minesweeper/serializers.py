@@ -16,6 +16,8 @@ class DifficultySerializer(serializers.ModelSerializer):
 
 class TileSerializer(serializers.ModelSerializer):
     is_mine = serializers.SerializerMethodField()
+    is_exploded_mine = serializers.SerializerMethodField()
+    wrongly_flagged = serializers.SerializerMethodField()
     neighbouring_mines = serializers.SerializerMethodField()
 
     class Meta:
@@ -26,12 +28,16 @@ class TileSerializer(serializers.ModelSerializer):
             'row',
             'column',
             'is_mine',
+            'is_exploded_mine',
+            'wrongly_flagged',
             'neighbouring_mines',
         )
         read_only_fields = (
             'row',
             'column',
             'is_mine',
+            'is_exploded_mine',
+            'wrongly_flagged',
             'neighbouring_mines',
         )
     
@@ -42,6 +48,14 @@ class TileSerializer(serializers.ModelSerializer):
     def get_neighbouring_mines(self, obj):
         if obj.status == 'Opened':
             return obj.neighbouring_mines
+    
+    def get_is_exploded_mine(self, obj):
+        if obj.status == 'Opened':
+            return obj.is_exploded_mine
+
+    def get_wrongly_flagged(self, obj):
+        if obj.status == 'Flagged':
+            return obj.wrongly_flagged
 
 
 class GameSerializer(serializers.ModelSerializer):

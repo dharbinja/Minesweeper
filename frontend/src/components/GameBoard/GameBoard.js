@@ -185,16 +185,17 @@ class GameBoard extends React.Component {
       return (
         <div className="text-center">
           <div className="minesweeper-board-container">
-            <GameTimer timeStarted={currentGame.time_started} timeEnded={currentGame.time_ended} />
-            <Button
-              bsStyle="primary"
-              disabled={isStartingNewGame}
-              onClick={!isStartingNewGame ? this.handleNewGameClick.bind(this) : null}
-            >
-            New Game
-            </Button>
-            <FlagCounter tiles={this.state.currentGame.tile_set} totalMines={gameDifficulty.num_mines} />
-            <div><br /></div>
+            <div className="minesweeper-board-header">
+              <GameTimer timeStarted={currentGame.time_started} timeEnded={currentGame.time_ended} />
+              <Button
+                bsStyle="primary"
+                disabled={isStartingNewGame}
+                onClick={!isStartingNewGame ? this.handleNewGameClick.bind(this) : null}
+              >
+              New Game
+              </Button>
+              <FlagCounter tiles={this.state.currentGame.tile_set} totalMines={gameDifficulty.num_mines} />
+            </div>
             <TileGrid 
               rows={rows} 
               cols={columns} 
