@@ -49,12 +49,14 @@ class App extends Component {
     const { error, isLoading } = this.state;
     if (error) {
       return (
-        <div>There was an error loading the game. Please try again.</div>
+        <div className="text-center">
+          <div>There was an error loading the game. Please try again or contact <a href="mailto:dharbinja@yahoo.ca">dharbinja@yahoo.ca</a>.</div>
+        </div>
       );
     } else {
       let difficultyElements = this.state.difficulties.map((difficulty) => {
         return (
-          <MenuItem key={difficulty.id} eventKey={difficulty.id} onSelect={this.handleDifficultySelect.bind(this)}>{difficulty.name}</MenuItem> 
+          <MenuItem key={difficulty.id} eventKey={difficulty.id} onSelect={this.handleDifficultySelect.bind(this)}>{difficulty.name}</MenuItem>
         )
       });
 
@@ -78,15 +80,15 @@ class App extends Component {
             <Nav>
             </Nav>
             <Nav pullRight>
-            <NavDropdown eventKey={3} title={selectedDifficultyString} id="basic-nav-dropdown">
-              {difficultyElements}
-            </NavDropdown>
+              <NavDropdown eventKey={3} title={selectedDifficultyString} id="basic-nav-dropdown">
+                {difficultyElements}
+              </NavDropdown>
             </Nav>
           </Navbar>
 
-          <GameBoard difficulties={this.state.difficulties} selectedDifficultyId={this.state.selectedDifficultyId}/>
+          <GameBoard difficulties={this.state.difficulties} selectedDifficultyId={this.state.selectedDifficultyId} />
 
-          {isLoading && <LoadingSpinner/>}
+          {isLoading && <LoadingSpinner />}
         </div>
       );
     }

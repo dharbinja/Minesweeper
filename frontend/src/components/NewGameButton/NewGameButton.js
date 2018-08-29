@@ -23,10 +23,10 @@ class NewGameButton extends React.Component {
         disabled={this.props.isStartingNewGame}
         onClick={!this.props.isStartingNewGame ? this.props.onClick : null}
       >
-        <img src={smileyImg} alt="New Game Button"/>
+        <img src={smileyImg} alt="New Game Button" />
       </Button>
     )
   }
 }
-    
+
 export default NewGameButton;

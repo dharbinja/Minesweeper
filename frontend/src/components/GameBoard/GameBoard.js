@@ -123,25 +123,25 @@ class GameBoard extends React.Component {
     axios.put(Constants.TILE_ENDPOINT + clickedTile.id + '/', {
       status: clickedTile.status === 'Flagged' ? 'Closed' : 'Flagged'
     })
-    .then((result) => {
-      // We can't modify the tiles individually so we'll have to make
-      // a copy and set them that way
-      let updatedTiles = Object.assign(this.state.tiles);
-      let editedTile = updatedTiles.find((tile) => tile.id === clickedTile.id);
-      editedTile.status = result.data.status;
-      editedTile.is_mine = result.data.is_mine;
-      editedTile.neighbouring_mines = result.data.neighbouring_mines;
+      .then((result) => {
+        // We can't modify the tiles individually so we'll have to make
+        // a copy and set them that way
+        let updatedTiles = Object.assign(this.state.tiles);
+        let editedTile = updatedTiles.find((tile) => tile.id === clickedTile.id);
+        editedTile.status = result.data.status;
+        editedTile.is_mine = result.data.is_mine;
+        editedTile.neighbouring_mines = result.data.neighbouring_mines;
 
-      // Now update the state
-      this.setState({
-        tiles: updatedTiles
+        // Now update the state
+        this.setState({
+          tiles: updatedTiles
+        })
       })
-    })
-    .catch((error) => {
-      this.setState({
-        error
+      .catch((error) => {
+        this.setState({
+          error
+        });
       });
-    });
   }
 
   handleTileLeftClick(event, clickedTile) {
@@ -158,14 +158,14 @@ class GameBoard extends React.Component {
     axios.put(Constants.TILE_ENDPOINT + clickedTile.id + '/', {
       status: 'Opened'
     })
-    .then(() => {
-      return this.getGameStateFromServer();
-    })
-    .catch((error) => {
-      this.setState({
-        error
+      .then(() => {
+        return this.getGameStateFromServer();
+      })
+      .catch((error) => {
+        this.setState({
+          error
+        });
       });
-    });
   }
 
   render() {
@@ -173,6 +173,8 @@ class GameBoard extends React.Component {
     if (error) {
       return (
         <div className="text-center">
+          <div>There was an error loading the game. Please try again or contact <a href="mailto:dharbinja@yahoo.ca">dharbinja@yahoo.ca</a>.</div>
+          < br/>
           <div>Fatal Error: {error.message}</div>
         </div>
       );
@@ -191,19 +193,19 @@ class GameBoard extends React.Component {
           <div className="minesweeper-board-container">
             <div className="minesweeper-board-header">
               <GameTimer timeStarted={currentGame.time_started} timeEnded={currentGame.time_ended} />
-              <NewGameButton isStartingNewGame={isStartingNewGame} result={currentGame.result} onClick={this.handleNewGameClick}/>
+              <NewGameButton isStartingNewGame={isStartingNewGame} result={currentGame.result} onClick={this.handleNewGameClick} />
               <FlagCounter tiles={this.state.currentGame.tile_set} totalMines={gameDifficulty.num_mines} />
             </div>
-            <TileGrid 
-              rows={rows} 
-              cols={columns} 
-              tiles={this.state.currentGame.tile_set} 
-              onLeftClick={this.handleTileLeftClick} 
+            <TileGrid
+              rows={rows}
+              cols={columns}
+              tiles={this.state.currentGame.tile_set}
+              onLeftClick={this.handleTileLeftClick}
               onRightClick={this.handleTileRightClick}
-              />
+            />
           </div>
 
-          {isStartingNewGame && <LoadingSpinner spinnerText="Starting New Game..."/>}
+          {isStartingNewGame && <LoadingSpinner spinnerText="Starting New Game..." />}
         </div>
       )
     }

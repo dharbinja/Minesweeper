@@ -20,7 +20,7 @@ class GameTimer extends React.Component {
   }
 
   tick() {
-    const secondsDifference = 
+    const secondsDifference =
       this.calculateDifferenceInSeconds(new Date(this.props.timeStarted), Date.now());
 
     this.setState({
@@ -51,7 +51,7 @@ class GameTimer extends React.Component {
 
     return (
       <div className="minesweeper-timer">
-        <img src={clock} alt="clock" width="20"/>
+        <img src={clock} alt="clock" width="20" />
         <span>{secondsDifference}</span>
       </div>
     )
