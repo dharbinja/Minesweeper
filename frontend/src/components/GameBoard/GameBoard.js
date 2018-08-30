@@ -27,13 +27,17 @@ class GameBoard extends React.Component {
   }
 
   getGameStateFromServer() {
-    return axios.get(Constants.GAMES_ENDPOINT + this.state.currentGame.id + '/')
+    var gamePromise = axios.get(Constants.GAMES_ENDPOINT + this.state.currentGame.id + '/');
+    var tilesPromise = axios.get(Constants.TILE_ENDPOINT + '?game=' + this.state.currentGame.id);
+
+    return Promise.all([gamePromise, tilesPromise])
       .then((result) => {
-        const currentGame = result.data;
+        const currentGame = result[0].data;
+        const tiles = result[1].data;
 
         this.setState({
           currentGame: currentGame,
-          tiles: currentGame.tile_set
+          tiles: tiles
         });
       })
       .catch((error) => {
@@ -44,7 +48,7 @@ class GameBoard extends React.Component {
   }
 
   componentDidMount() {
-    // We'll make an API request to get the current game being played (the last started)
+    // We'll make an API request to get the current game being played and all of it's tiles.
     axios.get(Constants.GAMES_ENDPOINT)
       .then((result) => {
         const currentGame = result.data[0];
@@ -52,14 +56,27 @@ class GameBoard extends React.Component {
         if (currentGame) {
           // A game already exist, we'll continue it
           this.setState({
-            isLoaded: true,
             // Remember that the games come back sorted by last started
-            currentGame: currentGame,
-            tiles: currentGame.tile_set
+            currentGame: currentGame
+          });
+
+          // We'll also get the tiles for it
+          return axios.get(Constants.TILE_ENDPOINT + '?game=' + currentGame.id)
+        } 
+        return null;
+      })
+      .then((result) => {
+        if (result) {
+          const tiles = result.data;
+
+          // If we have a result, it means we got our tiles back!
+          this.setState({
+            isLoaded: true,
+            tiles: tiles
           });
         } else {
-          // No game exists, we'll start a new one
-          return this.createNewGame()
+          // If we have no data, it means no game exists, we'll start a new one!
+          return this.createNewGame();
         }
       })
       .catch((error) => {
@@ -92,13 +109,22 @@ class GameBoard extends React.Component {
     return axios.post(Constants.GAMES_ENDPOINT, {
       difficulty: newDifficulty
     })
+      // First we make a call to create a new game
       .then((result) => {
+        const newGame = result.data;
+        this.setState({
+          currentGame: newGame
+        });
+        return axios.get(Constants.TILE_ENDPOINT + '?game=' + newGame.id); 
+      })
+      // Then we'll retrieve the tile set
+      .then((result) => {
+        const tiles = result.data;
         this.setState({
           isLoaded: true,
           isStartingNewGame: false,
-          currentGame: result.data,
-          tiles: result.data.tile_set
-        });
+          tiles: tiles
+        })
       })
       .catch((error) => {
         this.setState({
@@ -194,12 +220,12 @@ class GameBoard extends React.Component {
             <div className="minesweeper-board-header">
               <GameTimer timeStarted={currentGame.time_started} timeEnded={currentGame.time_ended} />
               <NewGameButton isStartingNewGame={isStartingNewGame} result={currentGame.result} onClick={this.handleNewGameClick} />
-              <FlagCounter tiles={this.state.currentGame.tile_set} totalMines={gameDifficulty.num_mines} />
+              <FlagCounter tiles={this.state.tiles} totalMines={gameDifficulty.num_mines} />
             </div>
             <TileGrid
               rows={rows}
               cols={columns}
-              tiles={this.state.currentGame.tile_set}
+              tiles={this.state.tiles}
               onLeftClick={this.handleTileLeftClick}
               onRightClick={this.handleTileRightClick}
             />

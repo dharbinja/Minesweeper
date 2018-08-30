@@ -59,15 +59,12 @@ class TileSerializer(serializers.ModelSerializer):
 
 
 class GameSerializer(serializers.ModelSerializer):
-    tile_set = TileSerializer(many=True, read_only=True)
-
     class Meta:
         model = Game
         fields = (
             'id',
             'time_started',
             'time_ended',
-            'tile_set',
             'difficulty',
             'result',
         )

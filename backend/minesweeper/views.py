@@ -18,3 +18,17 @@ class GameDetail(generics.RetrieveAPIView):
 class TileUpdate(generics.RetrieveUpdateAPIView):
     queryset = Tile.objects.all()
     serializer_class = TileSerializer
+
+class TileList(generics.ListAPIView):
+    serializer_class = TileSerializer
+
+    def get_queryset(self):
+        """
+        Optionally restrics the returned tiles to a given game,
+        by filtering against a 'game' query parameter in the URL.
+        """
+        queryset = Tile.objects.all()
+        game = self.request.query_params.get('game', None)
+        if game is not None:
+            queryset = queryset.filter(game=game)
+        return queryset

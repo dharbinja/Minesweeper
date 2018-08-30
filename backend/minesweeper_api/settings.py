@@ -26,6 +26,7 @@ SECRET_KEY = 't65=kk5tlwvff*e3be97t%cmk7nee30=vtw^s0o&$4*2od4^p+'
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'localhost',
     'ec2-34-221-179-99.us-west-2.compute.amazonaws.com',
 ]
 
@@ -50,9 +51,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    ),
+    ]
 }
 
 MIDDLEWARE = [
@@ -67,11 +68,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Add our local host origin as well as our EC instance hosing the dev site.
-CORS_ORIGIN_WHITELIST = (
-    'localhost:3000/',
-    'http://ec2-34-221-179-99.us-west-2.compute.amazonaws.com/',
-)
+# This is a bit too permissive so we would have to handle it differently in production
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'minesweeper_api.urls'
 
