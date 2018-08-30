@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import './App.css';
+import MinesweeperService from './services/MinesweeperService';
 import logo from './images/minesweeper_logo.png';
 import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
 import GameBoard from './components/GameBoard/GameBoard';
-import Constants from './helpers/Constants';
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 
 class App extends Component {
@@ -14,21 +13,25 @@ class App extends Component {
       difficulties: [],
       selectedDifficultyId: null,
       isLoading: false,
-      error: null
+      error: null,
+      minesweeperService: new MinesweeperService()
     }
   }
 
+  /**
+   * Calls our API to get a set of difficulties
+   */
   componentDidMount() {
     this.setState({
       isLoading: true
     })
 
     // We'll pre-load the difficulties
-    axios.get(Constants.DIFFICULTY_ENDPOINT)
-      .then((result) => {
+    this.state.minesweeperService.getDifficulties()
+      .then((difficulties) => {
         this.setState({
           isLoading: false,
-          difficulties: result.data,
+          difficulties: difficulties,
         });
       })
       .catch((error) => {
@@ -39,12 +42,20 @@ class App extends Component {
       });
   }
 
+  /**
+   * Changes which difficulty has been selected from the navbar dropdown
+   * 
+   * @param {int} The id of the difficulty that was selected 
+   */
   handleDifficultySelect(eventKey) {
     this.setState({
       selectedDifficultyId: eventKey
     });
   }
 
+  /**
+   * Renders the component
+   */
   render() {
     const { error, isLoading } = this.state;
     if (error) {
@@ -86,7 +97,11 @@ class App extends Component {
             </Nav>
           </Navbar>
 
-          <GameBoard difficulties={this.state.difficulties} selectedDifficultyId={this.state.selectedDifficultyId} />
+          <GameBoard 
+            difficulties={this.state.difficulties} 
+            selectedDifficultyId={this.state.selectedDifficultyId} 
+            minesweeperService={this.state.minesweeperService}
+            />
 
           {isLoading && <LoadingSpinner />}
         </div>
