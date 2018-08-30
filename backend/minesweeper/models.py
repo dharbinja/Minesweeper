@@ -1,16 +1,16 @@
 import math
 from enum import Enum
-from datetime import datetime
 from random import sample
 
 from django.db import models
 from django.utils import timezone
+from django.core.validators import MinValueValidator
 
 class Difficulty(models.Model):
     name = models.CharField(max_length=20, null=True)
-    rows = models.IntegerField(default=0)
-    columns = models.IntegerField(default=0)
-    num_mines = models.IntegerField(default=0)
+    rows = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
+    columns = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
+    num_mines = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
 
     def __str__(self):
         """String representation of a game difficulty"""
@@ -18,9 +18,9 @@ class Difficulty(models.Model):
 
 
 class Game(models.Model):
-    time_started = models.DateTimeField(default=datetime.now)
+    time_started = models.DateTimeField(default=timezone.now, editable=False)
     time_ended = models.DateTimeField(null=True, blank=True)
-    difficulty = models.ForeignKey(Difficulty, on_delete=models.PROTECT, null=True)
+    difficulty = models.ForeignKey(Difficulty, on_delete=models.PROTECT, blank=False)
     result = models.CharField(max_length=20, default='')
     opened_tiles = models.IntegerField(default=0)
 
@@ -203,10 +203,10 @@ class Tile(models.Model):
     status = models.CharField(max_length=7, choices=TILE_STATUS, default=TILE_STATUS[0][0])
     row = models.IntegerField(default=0)
     column = models.IntegerField(default=0)
-    is_mine = models.BooleanField()
+    is_mine = models.BooleanField(default=False)
     is_exploded_mine = models.BooleanField(default=False)
     wrongly_flagged = models.BooleanField(default=False)
-    neighbouring_mines = models.IntegerField()
+    neighbouring_mines = models.IntegerField(default=0)
 
     def __str__(self):
         """String representation of the Tile model."""
