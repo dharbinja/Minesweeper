@@ -1,10 +1,10 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import './Tile.css';
-import flagImg from '../../images/flag.png';
-import nonExplodedBomb from '../../images/non_exploded_bomb.png';
-import explodedBomb from '../../images/exploded_bomb.jpg';
-import wrongBomb from '../../images/wrong_bomb.png';
+import flagImg from '../../assets/images/flag.png';
+import nonExplodedBomb from '../../assets/images/non_exploded_bomb.png';
+import explodedBomb from '../../assets/images/exploded_bomb.jpg';
+import wrongBomb from '../../assets/images/wrong_bomb.png';
 
 class Tile extends React.Component {
   constructor(props) {

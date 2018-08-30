@@ -1,6 +1,6 @@
 import React from 'react';
 import './FlagCounter.css';
-import flag from '../../images/flag_no_bg.png';
+import flag from '../../assets/images/flag_no_bg.png';
 import IconCounter from '../IconCounter/IconCounter';
 
 class FlagCounter extends React.Component {

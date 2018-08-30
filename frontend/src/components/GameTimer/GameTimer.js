@@ -1,6 +1,6 @@
 import React from 'react';
 import './GameTimer.css';
-import clock from '../../images/clock.png';
+import clock from '../../assets/images/clock.png';
 import IconCounter from '../IconCounter/IconCounter';
 
 const MAX_TIME_ELAPSED = 999;

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import smiley from '../../images/smiley.png';
-import winSmiley from '../../images/win_smiley.png';
-import lossSmiley from '../../images/lose_smiley.png';
+import smiley from '../../assets/images/smiley.png';
+import winSmiley from '../../assets/images/win_smiley.png';
+import lossSmiley from '../../assets/images/lose_smiley.png';
 import './NewGameButton.css';
 
 class NewGameButton extends React.Component {

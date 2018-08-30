@@ -3,6 +3,7 @@
   position: relative;
   display: inline-block;
   border: 5px outset darkgrey;
+  background-color: #94bfca
 }
 
 .minesweeper-board-header {

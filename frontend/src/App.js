@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import MinesweeperService from './services/MinesweeperService';
-import logo from './images/minesweeper_logo.png';
+import logo from './assets/images/minesweeper_logo.png';
 import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
 import GameBoard from './components/GameBoard/GameBoard';
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
