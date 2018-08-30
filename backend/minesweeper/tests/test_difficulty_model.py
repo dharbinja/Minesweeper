@@ -3,6 +3,7 @@ from .test_helper import create_difficulty
 
 from minesweeper.models import Difficulty
 
+
 class DifficultyModelTests(TestCase):
 
     def test_can_create_difficulty_with_defaults(self):

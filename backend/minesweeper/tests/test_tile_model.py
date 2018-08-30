@@ -3,6 +3,7 @@ from .test_helper import create_difficulty, create_game
 
 from minesweeper.models import Tile
 
+
 class TileModelTests(TestCase):
 
     def test_can_create_tile_from_only_game(self):

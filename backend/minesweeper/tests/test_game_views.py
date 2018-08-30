@@ -5,6 +5,7 @@ from rest_framework.test import APITestCase, APIClient
 
 from .test_helper import create_game, create_difficulty
 
+
 class GameAPITests(APITestCase):
 
     def test_get_all_games(self):

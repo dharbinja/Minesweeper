@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from .models import Difficulty, Game, Tile
 
+
 class DifficultySerializer(serializers.ModelSerializer):
     class Meta:
         model = Difficulty
@@ -43,7 +44,7 @@ class TileSerializer(serializers.ModelSerializer):
             'wrongly_flagged',
             'neighbouring_mines',
         )
-    
+
     def get_is_mine(self, obj):
         """
         Returns the is_mine attribute only if the tile is opened
@@ -57,7 +58,7 @@ class TileSerializer(serializers.ModelSerializer):
         """
         if obj.status == 'Opened':
             return obj.neighbouring_mines
-    
+
     def get_is_exploded_mine(self, obj):
         """
         Returns the is_exploded_mine attribute only if the tile is opened

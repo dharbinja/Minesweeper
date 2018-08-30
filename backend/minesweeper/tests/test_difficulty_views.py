@@ -5,6 +5,7 @@ from rest_framework.test import APITestCase, APIClient
 from .test_helper import create_difficulty
 from minesweeper.models import Difficulty
 
+
 class DifficultyAPITests(APITestCase):
 
     def test_get_all_difficulties(self):

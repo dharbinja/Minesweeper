@@ -3,6 +3,7 @@ from .test_helper import create_difficulty
 
 from minesweeper.models import Game
 
+
 class GameModelTests(TestCase):
 
     def test_can_create_a_game_from_only_difficulty(self):

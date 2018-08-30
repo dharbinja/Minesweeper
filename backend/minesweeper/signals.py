@@ -4,6 +4,7 @@ from django.utils import timezone
 
 from .models import Game, Tile
 
+
 @receiver(post_save, sender=Game)
 def post_game_created(sender, instance, created, **kwargs):
     """
@@ -13,6 +14,7 @@ def post_game_created(sender, instance, created, **kwargs):
     if created:
         instance.build_game_tiles()
 
+
 @receiver(post_save, sender=Tile)
 def post_tile_updated(sender, instance, **kwargs):
     """
@@ -21,5 +23,3 @@ def post_tile_updated(sender, instance, **kwargs):
     """
     if instance.status == 'Opened':
         instance.game.open_tile(instance)
-        
-         

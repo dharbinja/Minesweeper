@@ -4,6 +4,7 @@ from rest_framework.test import APITestCase, APIClient
 
 from .test_helper import create_tile, create_game, create_difficulty
 
+
 class TileAPITests(APITestCase):
 
     def test_get_all_tiles(self):
