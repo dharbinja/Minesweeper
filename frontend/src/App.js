@@ -15,7 +15,6 @@ class App extends Component {
       difficulties: [],
       selectedDifficultyId: null,
       isLoading: false,
-      error: null,
       minesweeperService: new MinesweeperService()
     }
   }
