@@ -73,6 +73,7 @@ class MinesweeperService {
   /**
    * Makes a call to get the list of games. The first game is the "current game". If no 
    * games are found in the list, then we will create a new game and return the list of games.
+   * Note: This could be improved if there was a "current game" API call.
    * 
    * @returns Promise<Object> An object containing the game and the tiles of either the current 
    *                          game or a newly created game.
