@@ -122,7 +122,8 @@ class Game(models.Model):
     def open_neighbours(self, tile):
         """
         This function will open all the neighbours of a tile if they are already unopened. This
-        function is mostly useful when you click on a tile that has no mines around it.
+        function is useful when you click on a tile that has no mines around it. We then recursively
+        check all neighbours to see if they have any mines around them.
         """
         neighbour_ids = []
         self.get_all_neighbours_to_be_opened(tile, neighbour_ids)
@@ -130,7 +131,9 @@ class Game(models.Model):
 
     def open_tile(self, tile):
         """
-        Opens a particular tile in the game
+        Opens a particular tile in the game. This is done by setting the tile's status
+        to 'Opened'. If that tile is a mine, we've lost the game. If that tile is not
+        a mine, we will check win scenarios and see if we need to open up any neighbours.
         """
         # We can't open tiles once the game is done
         if self.result != '':
@@ -153,7 +156,9 @@ class Game(models.Model):
 
     def game_lost(self):
         """
-        We've lost the game by "stepping" on a mine, so we'll set the result and the time ended
+        We've lost the game by "stepping" on a mine, so we'll set the result and the time ended.
+        Stepping on a mine happens when you set the status of a Tile to "Opened" and is_mine 
+        is set to True.
         """
         self.time_ended = timezone.now()
         self.result = 'Loss'
