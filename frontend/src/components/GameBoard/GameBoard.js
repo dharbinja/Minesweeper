@@ -5,6 +5,7 @@ import GameTimer from '../GameTimer/GameTimer';
 import FlagCounter from '../FlagCounter/FlagCounter';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import NewGameButton from '../NewGameButton/NewGameButton';
+import ErrorViewer from '../ErrorViewer/ErrorViewer';
 
 class GameBoard extends React.Component {
   constructor(props) {
@@ -173,11 +174,7 @@ class GameBoard extends React.Component {
     const { error, isLoaded, isStartingNewGame, currentGame } = this.state;
     if (error) {
       return (
-        <div className="text-center">
-          <div>There was an error loading the game. Please try again or contact <a href="mailto:dharbinja@yahoo.ca">dharbinja@yahoo.ca</a>.</div>
-          < br/>
-          <div>Fatal Error: {error.message}</div>
-        </div>
+        <ErrorViewer error={error} />
       );
     } else if (!isLoaded) {
       return (

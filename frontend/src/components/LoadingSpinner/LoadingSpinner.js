@@ -7,7 +7,7 @@ class LoadingSpinner extends React.Component {
     return (
       <div className="spinner-overlay">
         <div className="spinner-content">
-          <Spinner name="circle" color="blue" />
+          <Spinner name="circle" color="blue" fadeIn="none"/>
           <div className="spinner-text">{this.props.spinnerText || 'Loading Data...'}</div>
         </div>
       </div>

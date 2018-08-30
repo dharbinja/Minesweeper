@@ -5,11 +5,13 @@ import logo from './images/minesweeper_logo.png';
 import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
 import GameBoard from './components/GameBoard/GameBoard';
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
+import ErrorViewer from './components/ErrorViewer/ErrorViewer';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      error: null,
       difficulties: [],
       selectedDifficultyId: null,
       isLoading: false,
@@ -60,9 +62,7 @@ class App extends Component {
     const { error, isLoading } = this.state;
     if (error) {
       return (
-        <div className="text-center">
-          <div>There was an error loading the game. Please try again or contact <a href="mailto:dharbinja@yahoo.ca">dharbinja@yahoo.ca</a>.</div>
-        </div>
+        <ErrorViewer error={error} />
       );
     } else {
       let difficultyElements = this.state.difficulties.map((difficulty) => {
