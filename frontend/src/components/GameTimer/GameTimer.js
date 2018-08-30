@@ -41,7 +41,7 @@ class GameTimer extends React.Component {
       // Game is over, display the duration in seconds
       const timeStart = new Date(this.props.timeStarted);
       const timeEnd = new Date(this.props.timeEnded);
-      secondsDifference = this.calculateDifferenceInSeconds(timeStart, timeEnd);
+      secondsDifference = Math.min(this.calculateDifferenceInSeconds(timeStart, timeEnd), MAX_TIME_ELAPSED);
     } else {
       // Game is still going, let's keep the timer going
       this.timerID = setInterval(
