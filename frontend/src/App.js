@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import './App.css';
 import MinesweeperService from './services/MinesweeperService';
 import logo from './assets/images/minesweeper_logo.png';
-import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
+import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 import GameBoard from './components/GameBoard/GameBoard';
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 import ErrorViewer from './components/ErrorViewer/ErrorViewer';
+import Leaderboard from './components/Leaderboard/Leaderboard';
 
 class App extends Component {
   constructor(props) {
@@ -77,33 +79,50 @@ class App extends Component {
       }
 
       return (
-        <div>
-          <Navbar>
-            <Navbar.Header>
-              <Navbar.Brand>
-                <img className="logo" src={logo} alt="logo" />
-              </Navbar.Brand>
-              <Navbar.Brand>
-                Minesweeper
-              </Navbar.Brand>
-            </Navbar.Header>
-            <Nav>
-            </Nav>
-            <Nav pullRight>
-              <NavDropdown eventKey={3} title={selectedDifficultyString} id="basic-nav-dropdown">
-                {difficultyElements}
-              </NavDropdown>
-            </Nav>
-          </Navbar>
+        <Router>
+          <div>
+            <Navbar>
+              <Navbar.Header>
+                <Navbar.Brand>
+                  <img className="logo" src={logo} alt="logo" />
+                </Navbar.Brand>
+                <Navbar.Brand>
+                  Minesweeper
+                </Navbar.Brand>
+              </Navbar.Header>
+              <Nav>
+                <NavItem>
+                  <Link to='/'>Play</Link>
+                </NavItem>
+                <NavItem>
+                  <Link to='/leaderboard'>Leaderboard</Link>
+                </NavItem>
+              </Nav>
+              <Nav pullRight>
+                <NavDropdown eventKey={3} title={selectedDifficultyString} id="basic-nav-dropdown">
+                  {difficultyElements}
+                </NavDropdown>
+              </Nav>
+            </Navbar>
 
-          <GameBoard 
-            difficulties={this.state.difficulties} 
-            selectedDifficultyId={this.state.selectedDifficultyId} 
-            minesweeperService={this.state.minesweeperService}
+            {isLoading && <LoadingSpinner />}
+
+            <Route exact path="/" 
+              component={()=> 
+                <GameBoard 
+                  difficulties={this.state.difficulties} 
+                  selectedDifficultyId={this.state.selectedDifficultyId} 
+                  minesweeperService={this.state.minesweeperService}
+                />
+              }
             />
-
-          {isLoading && <LoadingSpinner />}
-        </div>
+            <Route path="/leaderboard" component={() => 
+              <Leaderboard
+                minesweeperService={this.state.minesweeperService}
+              />}
+            />
+          </div>
+        </Router>
       );
     }
   }
