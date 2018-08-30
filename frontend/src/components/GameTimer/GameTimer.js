@@ -1,6 +1,7 @@
 import React from 'react';
 import './GameTimer.css';
 import clock from '../../images/clock.png';
+import IconCounter from '../IconCounter/IconCounter';
 
 const MAX_TIME_ELAPSED = 999;
 
@@ -51,8 +52,7 @@ class GameTimer extends React.Component {
 
     return (
       <div className="minesweeper-timer">
-        <img src={clock} alt="clock" width="20" />
-        <span>{secondsDifference}</span>
+        <IconCounter text={secondsDifference} image={clock} />
       </div>
     )
   }

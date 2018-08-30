@@ -1,6 +1,7 @@
 import React from 'react';
 import './FlagCounter.css';
 import flag from '../../images/flag_no_bg.png';
+import IconCounter from '../IconCounter/IconCounter';
 
 class FlagCounter extends React.Component {
   render() {
@@ -8,8 +9,7 @@ class FlagCounter extends React.Component {
 
     return (
       <div className="minesweeper-flag-counter">
-        <img src={flag} alt="flag" />
-        <span>{flaggedTiles.length}</span>
+        <IconCounter text={flaggedTiles.length} image={flag} />
       </div>
     )
   }

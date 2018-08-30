@@ -1,0 +1,17 @@
+.minesweeper-icon-counter {
+  font-size: 14px;
+  padding: 5px 0px;
+  text-align: right;
+  min-width: 70px;
+  color: darkred;
+}
+
+.minesweeper-icon-counter img {
+  width: 16px;
+  height: 16px;
+  vertical-align: baseline;
+}
+
+.minesweeper-icon-counter span {
+  padding-left: 7px;
+}

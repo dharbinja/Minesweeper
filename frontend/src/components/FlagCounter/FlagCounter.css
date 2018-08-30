@@ -1,21 +1,6 @@
 /* Position the flag counter to the top right */
 .minesweeper-flag-counter {
-    position: absolute;
-    top: 12px;
-    right: 5px;
-    font-size: 14px;
-    padding: 5px 0px;
-    text-align: right;
-    min-width: 70px;
-    color: darkred;
-  }
-
-  .minesweeper-flag-counter img {
-    width: 12px;
-    height: 16px;
-    vertical-align: baseline;
-  }
-  
-  .minesweeper-flag-counter span {
-    padding-left: 7px;
-  }
+  position: absolute;
+  top: 12px;
+  right: 5px;
+}
