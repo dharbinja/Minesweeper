@@ -8,6 +8,8 @@
     "react": "^16.4.2",
     "react-bootstrap": "^0.32.3",
     "react-dom": "^16.4.2",
+    "react-facebook-login": "^4.1.0",
+    "react-google-login": "^3.2.1",
     "react-scripts": "1.1.5",
     "react-spinkit": "^3.0.0"
   },
